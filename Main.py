@@ -1,3 +1,10 @@
+#color pallete
+
+#111844   --darkest blue
+#4B5694   --blue
+#7288AE   --light blue
+#EAE0CF   --sandy
+
 import pygame
 
 pygame.init()
@@ -10,6 +17,9 @@ playerspeed = 3
 player_y_velocity = 0
 gravity = 0.5
 on_ground = False
+coyote_time = 0.15
+coyote_timer = 0.1
+
 
 playerimg = pygame.image.load("images/player.png")
 
@@ -28,9 +38,12 @@ while running:
             running = False
     keys = pygame.key.get_pressed()
 
-    if keys[pygame.K_SPACE] and on_ground == True:
-        player_y_velocity = -12
-        on_ground = False
+    dt = clock.tick(60) / 1000
+
+    if keys[pygame.K_SPACE] and coyote_timer > 0:
+        if player_y_velocity >= 0:
+            player_y_velocity = -12
+            on_ground = False
 
 
     if keys[pygame.K_a]:
@@ -71,16 +84,18 @@ while running:
             player_y_velocity = 0
 
             on_ground = True
+            coyote_timer = coyote_time
 
     else:
         on_ground = False
+        coyote_timer = max(0, coyote_timer - dt)
+
 
     if player_rect.y > 600:
         player_rect.y = 0
         player_y_velocity = 0
 
+    print(coyote_timer)
     pygame.display.flip()
-
-    clock.tick(60)
 
 pygame.quit()
