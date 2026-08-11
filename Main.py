@@ -11,7 +11,7 @@ player_y_velocity = 0
 gravity = 0.5
 on_ground = False
 
-playerimg = pygame.image.load("images/player2.png")
+playerimg = pygame.image.load("images/player.png")
 
 player = pygame.transform.scale(playerimg, (100, 100))
 
@@ -32,34 +32,52 @@ while running:
         player_y_velocity = -12
         on_ground = False
 
+
     if keys[pygame.K_a]:
         player_rect.x -= playerspeed
+
+        if player_rect.colliderect(platform_one):
+            player_rect.left = platform_one.right
+
     if keys[pygame.K_d]:
         player_rect.x += playerspeed
+
+        if player_rect.colliderect(platform_one):
+            player_rect.right = platform_one.left
+
+
     if keys[pygame.K_LSHIFT]:
         playerspeed = 6
 
 
     
-    screen.fill("#321E48")
+    screen.fill("#111844")
 
     screen.blit(player, player_rect)
    #print("Player pos:", playerx, playery)
 
-    pygame.draw.rect(screen, ("#65DCD5"), platform_one)
+    pygame.draw.rect(screen, ("#EAE0CF"), platform_one)
 
+    player_y_velocity += gravity
+
+    player_rect.y += player_y_velocity
 
 
     if player_rect.colliderect(platform_one):
-        on_ground = True
+        if player_y_velocity > 0:
+
+            player_rect.bottom = platform_one.top
+
+            player_y_velocity = 0
+
+            on_ground = True
+
+    else:
+        on_ground = False
+
+    if player_rect.y > 600:
+        player_rect.y = 0
         player_y_velocity = 0
-        player_rect.bottom = platform_one.top
-
-    if on_ground == False:
-        player_y_velocity += gravity
-        player_rect.y += player_y_velocity
-
-
 
     pygame.display.flip()
 
