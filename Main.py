@@ -1,7 +1,13 @@
 import pygame
+from pathlib import Path
+
 pygame.init()
 
-pygame.display.set_icon(pygame.image.load('images/gameicon.png'))
+base_dir = Path(__file__).resolve().parent
+image_dir = base_dir / "Images"
+
+
+pygame.display.set_icon(pygame.image.load(image_dir / "gameicon.png")) #REMEMBER TO ADD LINUX SUPPORT
 pygame.display.set_caption("uhm")
 
 screen = pygame.display.set_mode((800, 600))
@@ -15,12 +21,14 @@ acceleration = 0.25
 
 on_ground = False
 
+jumps_available = 2
+jump_power = -11.5
 gravity = 0.5
 coyote_time = 0.1
 coyote_timer = 0.1
 
-playerleft = pygame.transform.scale(pygame.image.load("images/aple_left.png"), (42, 48))
-playerright = pygame.transform.scale(pygame.image.load("images/aple_right.png"), (42, 48))
+playerleft = pygame.transform.scale(pygame.image.load(image_dir / "aple_left.png"), (42, 48))
+playerright = pygame.transform.scale(pygame.image.load(image_dir / "aple_right.png"), (42, 48))
 
 player = playerright
 
@@ -42,10 +50,12 @@ while running:
     dt = clock.tick(60) / 1000 
 
 #--inputs
-    if keys[pygame.K_SPACE] and coyote_timer > 0:
-        if player_y_velocity >= 0:
-            player_y_velocity = -12
-            on_ground = False
+    if keys[pygame.K_SPACE] and jumps_available > 0:
+        if coyote_timer > 0 or on_ground or jumps_available < 2:
+            if player_y_velocity >= 0:
+                player_y_velocity = jump_power
+                on_ground = False
+                jumps_available -= 1
 
     if keys[pygame.K_a]:
         player = playerleft
@@ -107,6 +117,7 @@ while running:
 
                 player_y_velocity = 0
                 on_ground = True
+                jumps_available = 2
                 coyote_timer = coyote_time
         else:
             on_ground = False
@@ -121,7 +132,7 @@ while running:
     elif player_rect.x < 0:
         player_rect.x = 600
 
-    print(player_x_velocity)
+    print(jumps_available)
     pygame.display.flip()
 
 pygame.quit()
