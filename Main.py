@@ -4,8 +4,7 @@ from pathlib import Path
 pygame.init()
 
 base_dir = Path(__file__).resolve().parent
-image_dir = base_dir / "Images"
-
+image_dir = base_dir / "images"
 
 pygame.display.set_icon(pygame.image.load(image_dir / "gameicon.png"))
 pygame.display.set_caption("uhm")
@@ -33,7 +32,6 @@ anim_frame = 0
 
 playeridle = pygame.transform.scale(pygame.image.load(image_dir / "aple_idle.png"), (42, 48))
 playerfall = pygame.transform.scale(pygame.image.load(image_dir / "aple_fall.png"), (42, 48))
-
 
 player_right = [
     pygame.transform.scale(pygame.image.load(image_dir / "aple_right1.png"), (42, 48)),
@@ -75,8 +73,6 @@ while running:
 
             if anim_frame >= 2:
                 anim_frame = 0
-
-
 
 
     if keys[pygame.K_SPACE] and jumps_available > 0:
@@ -172,6 +168,7 @@ while running:
         player_rect.x = 600
 
     print(jumps_available)
+    print(player_y_velocity)
     pygame.display.flip()
 
 pygame.quit()
